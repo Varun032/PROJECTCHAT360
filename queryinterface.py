@@ -2,6 +2,30 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+# API integration
+from logingestor import API1, API2
+
+api1 = API1()
+api2 = API2()
+
+# Define a route for logging messages via API1
+@app.route('/log_api1', methods=['POST'])
+def log_api1():
+    data = request.json
+    level = data['level']
+    message = data['message']
+    api1.log_message(level, message)
+    return jsonify({'status': 'success'})
+
+# Define a route for logging messages via API2
+@app.route('/log_api2', methods=['POST'])
+def log_api2():
+    data = request.json
+    level = data['level']
+    message = data['message']
+    api2.log_message(level, message)
+    return jsonify({'status': 'success'})
+
 # Define a route for searching logs
 @app.route('/search_logs', methods=['GET'])
 def search_logs():
@@ -11,8 +35,7 @@ def search_logs():
     source = request.args.get('source')
 
     # Perform search based on filters
-    # Here you would search through the log files and return matching logs
-    # This is just a dummy response for demonstration
+    # Dummy response for demonstration
     logs = [
         {"level": "error", "log_string": "Failed to connect", "timestamp": "2023-09-15T08:00:00Z", "source": "log1.log"},
         {"level": "info", "log_string": "Connection established", "timestamp": "2023-09-16T08:00:00Z", "source": "log2.log"}
